@@ -1,0 +1,8 @@
+# Ignore compiled executables
+*.out
+*.exe
+*.o
+
+# Ignore OS-specific system junk
+.DS_Store
+Thumbs.db
