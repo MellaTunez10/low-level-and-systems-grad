@@ -2,58 +2,60 @@
 #include <stdio.h>
 #include <string.h>
 
+void get_word(char *buffer, int max_size);
+int compute_score(char *word);
+
 int POINTS[] = {1, 3, 3, 2,  1, 4, 2, 4, 1, 8, 5, 1, 3,
                 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
 
-char *get_word(char *buffer, int max_size);
-int compute_score(char *word);
-
 int main(void) {
-  char text1[100], text2[100];
+  // Prompt the players for words
+  char player1[100], player2[100];
+
+  // Player 1
   printf("Player 1: ");
-  char *player1 = get_word(text1, 100);
+  get_word(player1, 100);
+  // Player 2
   printf("Player 2: ");
-  char *player2 = get_word(text2, 100);
+  get_word(player2, 100);
 
   int score1 = compute_score(player1);
   int score2 = compute_score(player2);
 
   if (score1 > score2) {
-    printf("Player 1 wins!\n");
+    printf("Player 1 wins!");
   } else if (score2 > score1) {
-    printf("Player 2 wins!\n");
+    printf("Player 2 wins!");
   } else {
-    printf("Tie!\n");
+    printf("Tie!");
   }
+  printf("\n");
 
   return 0;
 }
 
-char *get_word(char *buffer, int max_size) {
-
-  if (fgets(buffer, max_size, stdin) == NULL) {
-    return NULL; // return if it fails
-  }
-
-  int len = strlen(buffer);
-  // replace the literal newline with '\0'
-  if (len > 0 && buffer[len - 1] == '\n') {
-    buffer[len - 1] = '\0';
-  }
-
-  // return the memory address of the filled cup
-  return buffer;
-}
-
 int compute_score(char *word) {
   int score = 0;
-
+  // Loop through the word
   for (int i = 0; word[i] != '\0'; i++) {
+    // If character is an alphabet
     if (isalpha(word[i])) {
       int index = toupper(word[i]) - 'A';
       score += POINTS[index];
     }
   }
-
   return score;
+}
+
+void get_word(char *buffer, int max_size) {
+
+  // Read the line safely from standard input
+  if (fgets(buffer, max_size, stdin) != NULL) {
+
+    // Clear the newline at the end of the string
+    int len = strlen(buffer);
+    if (len > 0 && buffer[len - 1] == '\n') {
+      buffer[len - 1] = '\0';
+    }
+  }
 }
