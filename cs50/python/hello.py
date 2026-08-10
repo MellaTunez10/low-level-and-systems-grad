@@ -3,11 +3,18 @@
 
 # Version 2
 
-greeting = input("What's your name? ")
+
+def manual_palindrome(text):
+    text = text.strip().lower()
+
+    last = len(text) - 1
+
+    for char in text:
+        if char == text[last]:
+            return True
+        last -= 1
+
+    return False
 
 
-def Hello(name):
-    print(f"hello, {name}")
-
-
-Hello(greeting)
+manual_palindrome("Hello")

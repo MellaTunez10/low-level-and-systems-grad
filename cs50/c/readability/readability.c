@@ -3,74 +3,69 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct {
-  int letters;
-  int words;
-  int sentences;
-} Count;
-
 void get_text(char *buffer, int max_size);
-Count count_text(char *text);
+int count_letters(char *text);
+int count_words(char *text);
+int count_sentences(char *text);
 
 int main(void) {
   char text[1000];
 
-  // Prompt the user for some text
   printf("Text: ");
   get_text(text, 1000);
 
-  // Count the number of letters, words and sentences in the text
-  Count result = count_text(text);
+  int letters = count_letters(text);
+  int words = count_words(text);
+  int sentences = count_sentences(text);
 
-  // Compute the Coleman-Liau index
-  float L = ((float)result.letters / result.words) * 100;
-  float S = ((float)result.sentences / result.words) * 100;
+  float L = ((float)letters / words) * 100;
+  float S = ((float)sentences / words) * 100;
 
-  int index = round(0.0588 * L - 0.296 * S - 15.8);
+  int result = round(0.0588 * L - 0.296 * S - 15.8);
 
-  // Print the grade level
-  if (index < 1) {
+  if (result < 1) {
     printf("Before Grade 1\n");
-  } else if (index >= 16) {
+  } else if (result >= 16) {
     printf("Grade 16+\n");
   } else {
-    printf("Grade %d\n", index);
+    printf("Grade %i\n", result);
   }
   return 0;
 }
 
-Count count_text(char *text) {
-  Count result = {0, 0, 0};
-  int in_word = 0;
-
+int count_letters(char *text) {
+  int count = 0;
   for (int i = 0; text[i] != '\0'; i++) {
-    // 1. If it's a letter, count it and mark that we are inside a word
     if (isalpha(text[i])) {
-      result.letters++;
-      if (in_word == 0) {
-        in_word = 1;
-        result.words++;
-      }
-    }
-    // 2. If it's a space, we are no longer inside a word
-    else if (isspace(text[i])) {
-      in_word = 0;
-    }
-    // 3. If it's a sentence closer, count it.
-    // Note: Characters like numbers or internal punctuation (quotes, hyphens)
-    // will safely drop through here and still be counted as part of a word if
-    // needed!
-    else {
-      if (in_word == 0) {
-        in_word = 1;
-        result.words++;
-      }
-      if (text[i] == '.' || text[i] == '?' || text[i] == '!') {
-        result.sentences++;
-      }
+      count++;
     }
   }
-  return result;
+  return count;
+}
+
+int count_words(char *text) {
+  if (strlen(text) == 0) {
+    return 0;
+  }
+  int count = 1;
+
+  for (int i = 0; text[i] != '\0'; i++) {
+    if (isspace(text[i])) {
+      count++;
+    }
+  }
+  return count;
+}
+
+int count_sentences(char *text) {
+  int count = 0;
+
+  for (int i = 0; text[i] != '\0'; i++) {
+    if (text[i] == '.' || text[i] == '?' || text[i] == '!') {
+      count++;
+    }
+  }
+  return count;
 }
 
 void get_text(char *buffer, int max_size) {
