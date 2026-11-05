@@ -16,7 +16,7 @@ void print_bricks(int n) {
     // loop through and print spaces before the bricks
     for (int spaces = 0; spaces < n - row - 1; spaces++) {
       printf(" ");
-    }
+   }
     // Loop and print left bricks
     for (int left = 0; left <= row; left++) {
       printf("#");
